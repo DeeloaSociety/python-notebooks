@@ -1,0 +1,4 @@
+marimo==0.15.0
+plotly==6.3.0
+format_currency==0.0.10
+iposconnect @ git+https://github.com/DeeloaSociety/iposconnect_py@develop
