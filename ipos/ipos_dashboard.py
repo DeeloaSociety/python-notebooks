@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.15.0"
+__generated_with = "0.15.1"
 app = marimo.App(width="medium", app_title="iPos Analytics Dashboard")
 
 
@@ -623,11 +623,11 @@ def _(
     sales_invoice_details,
 ):
     step = 3
-    prespective_by_stock_predict = ""
+    perspective_by_stock_predict = ""
 
     if len(item_code_fill) > 0 and item_code_support_forecast:
         sales_predictions = (
-            sales_invoice_details.forcast(item_kode=item_code.value)
+            sales_invoice_details.forecast(item_kode=item_code.value)
                 .prepare(target='jumlah_item')
                 .fit()
         )
@@ -645,11 +645,11 @@ def _(
         out_of_stock = mean_stock_predict - item_stock_by_item_code
 
         if item_stock_by_item_code < mean_stock_predict:
-            prespective_by_stock_predict = f"<b>Hasil prediksi</b> menunjukan bahwa dibutuhkan <b>{int(out_of_stock)} stock</b> lagi untuk <b>{item_code.value}</b> sehingga memenuhi target dalam <b>{step} hari</b> kedepan."
+            perspective_by_stock_predict = f"<b>Hasil prediksi</b> menunjukan bahwa dibutuhkan <b>{int(out_of_stock)} stock</b> lagi untuk <b>{item_code.value}</b> sehingga memenuhi target dalam <b>{step} hari</b> kedepan."
         else:
-            prespective_by_stock_predict = f"<b>Hasil prediksi</b> menunjukan bahwa jumlah stok cukup untuk target <b>{step} hari</b> kedepan."
+            perspective_by_stock_predict = f"<b>Hasil prediksi</b> menunjukan bahwa jumlah stok cukup untuk target <b>{step} hari</b> kedepan."
 
-    mo.md(prespective_by_stock_predict)
+    mo.md(perspective_by_stock_predict)
     return sales_prediction_results, sales_predictions
 
 
@@ -672,10 +672,10 @@ def _(
     if len(item_code_fill) > 0 and item_code_support_forecast:
         sales_forecast_plot = go.Figure()
 
-        tracesales_forecast1 = go.Scatter(x=sales_predictions.df.index, y=sales_predictions.df["jumlah_item"], name="train", mode="lines")
-        tracesales_forecast2 = go.Scatter(x=sales_prediction_results.index, y=sales_prediction_results["pred"], name="prediction", mode="lines")
-        sales_forecast_plot.add_trace(tracesales_forecast1)
-        sales_forecast_plot.add_trace(tracesales_forecast2)
+        trace_sales_forecast1 = go.Scatter(x=sales_predictions.df.index, y=sales_predictions.df["jumlah_item"], name="train", mode="lines")
+        trace_sales_forecast2 = go.Scatter(x=sales_prediction_results.index, y=sales_prediction_results["pred"], name="prediction", mode="lines")
+        sales_forecast_plot.add_trace(trace_sales_forecast1)
+        sales_forecast_plot.add_trace(trace_sales_forecast2)
 
         sales_forecast_plot.update_layout(
             title=f"Grafik prediksi penjualan item {item_code.value} di semua kantor/gudang",

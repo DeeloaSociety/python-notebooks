@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.15.0"
+__generated_with = "0.15.1"
 app = marimo.App(width="medium")
 
 
@@ -372,17 +372,17 @@ def _(
     selling_predict_result,
     step,
 ):
-    prespective_by_stock_predict = ""
+    perspective_by_stock_predict = ""
 
     if len(item_code_fill) > 0:
         mean_stock_predict = selling_predict_result.pred.mean()
         out_of_stock = mean_stock_predict - item_stock
         if item_stock < mean_stock_predict:
-            prespective_by_stock_predict = f"Hasil prediksi menunjukan bahwa dibutuhkan <b>{int(out_of_stock)} stock</b> lagi untuk <b>{selling_by_item_name.value}</b> sehingga memenuhi target dalam <b>{step} hari</b> kedepan."
+            perspective_by_stock_predict = f"Hasil prediksi menunjukan bahwa dibutuhkan <b>{int(out_of_stock)} stock</b> lagi untuk <b>{selling_by_item_name.value}</b> sehingga memenuhi target dalam <b>{step} hari</b> kedepan."
         else:
-            prespective_by_stock_predict = f"Hasil prediksi menunjukan bahwa jumlah stok cukup untuk target <b>{step} hari</b> kedepan."
+            perspective_by_stock_predict = f"Hasil prediksi menunjukan bahwa jumlah stok cukup untuk target <b>{step} hari</b> kedepan."
 
-    mo.md(prespective_by_stock_predict)
+    mo.md(perspective_by_stock_predict)
     return
 
 

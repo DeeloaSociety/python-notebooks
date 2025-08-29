@@ -1,5 +1,5 @@
-marimo==0.15.0
+marimo==0.15.1
 plotly==6.3.0
 format_currency==0.0.10
-iposconnect @ git+https://github.com/DeeloaSociety/iposconnect_py@develop
-sultanconnect @ git+https://github.com/DeeloaSociety/sultanconnect_py@develop
+iposconnect @ git+https://github.com/DeeloaSociety/iposconnect_py@2025.08.29
+sultanconnect @ git+https://github.com/DeeloaSociety/sultanconnect_py@2025.08.29
