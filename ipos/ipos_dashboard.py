@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.15.2"
+__generated_with = "0.16.4"
 app = marimo.App(width="medium", app_title="iPos Analytics Dashboard")
 
 
@@ -105,17 +105,17 @@ def _(get_end_date, get_start_date, mo):
 
 @app.cell
 def _():
-    from iposconnect import IposConnect
+    from iposconnect.dataframe import IposDataframe
 
-    iposConnect = IposConnect()
-    return (iposConnect,)
+    iposDataframe = IposDataframe()
+    return (iposDataframe,)
 
 
 @app.cell
-def _(format_currency, get_end_date, get_start_date, iposConnect, mo):
+def _(format_currency, get_end_date, get_start_date, iposDataframe, mo):
     journal = (
-        # call iposConnect.journal() for version 4
-        iposConnect.journalV5()
+        # call iposDataframe.journal() for version 4
+        iposDataframe.journalV5()
         .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
     )
 
@@ -203,24 +203,24 @@ def _(journal, mo, np):
 
 
 @app.cell
-def _(get_end_date, get_start_date, iposConnect):
+def _(get_end_date, get_start_date, iposDataframe):
     purchase_receipt = (
-        iposConnect.purchaseReceipt()
+        iposDataframe.purchaseReceipt()
             .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
     )
 
     purchase_receipt_details = (
-        iposConnect.purchaseReceiptDetails()
+        iposDataframe.purchaseReceiptDetails()
             .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
     )
 
     sales_invoice = (
-        iposConnect.salesInvoice()
+        iposDataframe.salesInvoice()
             .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
     )
 
     sales_invoice_details = (
-        iposConnect.salesInvoiceDetails()
+        iposDataframe.salesInvoiceDetails()
             .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
     )
     return (
@@ -517,8 +517,8 @@ def _(mo):
 
 
 @app.cell
-def _(iposConnect):
-    item_stock = iposConnect.itemStock()
+def _(iposDataframe):
+    item_stock = iposDataframe.itemStock()
     return (item_stock,)
 
 
@@ -589,8 +589,8 @@ def _(mo):
 
 
 @app.cell
-def _(iposConnect, item_code, sales_invoice_details):
-    item_code_fill = iposConnect.item().parts().byItemCode(item_code.value).load().to_pandas()
+def _(iposDataframe, item_code, sales_invoice_details):
+    item_code_fill = iposDataframe.item().parts().byItemCode(item_code.value).load().to_pandas()
     item_code_support_forecast = sales_invoice_details.parts().byDaily().count().to_pandas() > 1
     return item_code_fill, item_code_support_forecast
 

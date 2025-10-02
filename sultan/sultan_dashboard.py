@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.15.2"
+__generated_with = "0.16.4"
 app = marimo.App(width="medium")
 
 
@@ -94,15 +94,15 @@ def _(get_end_date, get_start_date, mo):
 
 @app.cell
 def _():
-    from sultanconnect import SultanConnect
+    from sultanconnect.dataframe import SultanDataframe
 
-    sultanConnect = SultanConnect()
-    return (sultanConnect,)
+    sultanDataframe = SultanDataframe()
+    return (sultanDataframe,)
 
 
 @app.cell
-def _(get_end_date, get_start_date, mo, sultanConnect):
-    total_revenue = sultanConnect.selling().totalRevenue(get_start_date().strftime("%Y-%m-%d"),
+def _(get_end_date, get_start_date, mo, sultanDataframe):
+    total_revenue = sultanDataframe.selling().totalRevenue(get_start_date().strftime("%Y-%m-%d"),
                                                           get_end_date().strftime("%Y-%m-%d")).to_pandas()
     total_revenue_stat = mo.stat(
         label="Total Revenue",
@@ -111,7 +111,7 @@ def _(get_end_date, get_start_date, mo, sultanConnect):
         value=f"Rp. {total_revenue:,.0f}"
     )
 
-    total_cogs = sultanConnect.selling().totalCOGS(get_start_date().strftime("%Y-%m-%d"),
+    total_cogs = sultanDataframe.selling().totalCOGS(get_start_date().strftime("%Y-%m-%d"),
                                                        get_end_date().strftime("%Y-%m-%d")).to_pandas()
     total_cogs_stat = mo.stat(
         label="Total COGS",
@@ -120,7 +120,7 @@ def _(get_end_date, get_start_date, mo, sultanConnect):
         value=f"Rp. {total_cogs:,.0f}"
     )
 
-    total_gross = sultanConnect.selling().totalGross(get_start_date().strftime("%Y-%m-%d"),
+    total_gross = sultanDataframe.selling().totalGross(get_start_date().strftime("%Y-%m-%d"),
                                                        get_end_date().strftime("%Y-%m-%d")).to_pandas()
     total_gross_stat = mo.stat(
         label="Gross Profit",
@@ -129,7 +129,7 @@ def _(get_end_date, get_start_date, mo, sultanConnect):
         value=f"Rp. {total_gross:,.0f}"
     )
 
-    total_stock = sultanConnect.inventory().between(get_start_date().strftime("%Y-%m-%d"),
+    total_stock = sultanDataframe.inventory().between(get_start_date().strftime("%Y-%m-%d"),
                                                     get_end_date().strftime("%Y-%m-%d")).totalStock().to_pandas()
     total_stocks_stat = mo.stat(
         label="Total Stocks",
@@ -161,9 +161,9 @@ def _(
 
 
 @app.cell
-def _(get_end_date, get_start_date, go, mo, sultanConnect):
+def _(get_end_date, get_start_date, go, mo, sultanDataframe):
     revenue_by_category_pd = (
-        sultanConnect.soldItem()
+        sultanDataframe.soldItem()
             .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
             .revenue(type="category").to_pandas()
     )
@@ -187,7 +187,7 @@ def _(get_end_date, get_start_date, go, mo, sultanConnect):
     )
 
     revenue_by_suplier_pd = (
-        sultanConnect.soldItem()
+        sultanDataframe.soldItem()
             .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
             .revenue(type="suplier").to_pandas()
     )
@@ -221,9 +221,9 @@ def _(get_end_date, get_start_date, go, mo, sultanConnect):
 
 
 @app.cell
-def _(get_end_date, get_start_date, go, mo, px, sultanConnect):
+def _(get_end_date, get_start_date, go, mo, px, sultanDataframe):
     frequently_purchased_ratio_pd = (
-        sultanConnect.inventory()
+        sultanDataframe.inventory()
             .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
             .frequentlyPurchased().to_pandas().head(5)
     )
@@ -263,9 +263,9 @@ def _(get_end_date, get_start_date, mo):
 
 
 @app.cell
-def _(get_end_date, get_start_date, mo, sultanConnect):
+def _(get_end_date, get_start_date, mo, sultanDataframe):
     inventory_by = (
-        sultanConnect.inventory()
+        sultanDataframe.inventory()
             .between(get_start_date().strftime("%Y-%m-%d"),get_end_date().strftime("%Y-%m-%d"))
             .load().to_pandas().drop(columns=["item_created", "item_flag", "item_purchase_price"])
     )
@@ -295,9 +295,9 @@ def _(mo):
 
 
 @app.cell
-def _(get_end_date, get_start_date, mo, selling_by_item_name, sultanConnect):
+def _(get_end_date, get_start_date, mo, selling_by_item_name, sultanDataframe):
     selling_by = (
-        sultanConnect.selling().filter()
+        sultanDataframe.selling().filter()
         .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
     )
 
@@ -322,10 +322,10 @@ def _(mo, selling_by_item_name):
 
 
 @app.cell
-def _(get_end_date, get_start_date, mo, selling_by_item_name, sultanConnect):
+def _(get_end_date, get_start_date, mo, selling_by_item_name, sultanDataframe):
     if len(selling_by_item_name.value) > 0:
         revenue_by_sell_price = (
-            sultanConnect.selling()
+            sultanDataframe.selling()
                 .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
                 .bySellPrice(item_name=selling_by_item_name.value).to_pandas()
         )
@@ -335,13 +335,13 @@ def _(get_end_date, get_start_date, mo, selling_by_item_name, sultanConnect):
 
 
 @app.cell
-def _(get_end_date, get_start_date, selling_by_item_name, sultanConnect):
+def _(get_end_date, get_start_date, selling_by_item_name, sultanDataframe):
     step = 3
-    item_code_fill = sultanConnect.item().byItemName(selling_by_item_name.value).to_pandas()
+    item_code_fill = sultanDataframe.item().byItemName(selling_by_item_name.value).to_pandas()
 
     if len(item_code_fill) > 0:
         selling_for_predict = (
-            sultanConnect.selling().filter()
+            sultanDataframe.selling().filter()
                 .between(get_start_date().strftime("%Y-%m-%d"), get_end_date().strftime("%Y-%m-%d"))
                 .forecast(item_name=selling_by_item_name.value)
                 .prepare(target='item_quantity')
@@ -351,7 +351,7 @@ def _(get_end_date, get_start_date, selling_by_item_name, sultanConnect):
         selling_predict_result = selling_for_predict.predict(step=step)
 
         item_stock = (
-            sultanConnect.item()
+            sultanDataframe.item()
                 .byItemName(item_name=selling_by_item_name.value).select("item_stock")
                 .to_pandas().astype("float").values.item())
     return (
